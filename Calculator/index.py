@@ -1,61 +1,58 @@
-from tkinter import *
+import tkinter as tk
+from tkinter import Tk, Entry, Button
 
 def insert_number(number):
-    current_text=e1.get()
-    e1.delete(0,END)
-    e1.insert(0,current_text+str(number))
+    current = e1.get()
+    e1.delete(0, tk.END)
+    e1.insert(0, current + str(number))
 
-def set_operation(operation):
-    global first_number, math_operation
+def set_operation(operator):
+    global first_number
+    global operation
     first_number = int(e1.get())
-    math_operation = operation
-    e1.delete(0, END)
+    operation = operator
+    e1.delete(0, tk.END)
+
+def clear_entry():
+    e1.delete(0, tk.END)
 
 def calculate():
     second_number = int(e1.get())
-    e1.delete(0, END)
-    if math_operation == '+':
-        result = first_number + second_number
-    e1.insert(0, str(result))
-
-def clear():
-    e1.delete(0,END)
+    e1.delete(0, tk.END)
+    if operation == "+":
+        e1.insert(0, first_number + second_number)
+    elif operation == "-":
+        e1.insert(0, first_number - second_number)
+    elif operation == "*":
+        e1.insert(0, first_number * second_number)
+    elif operation == "/":
+        if second_number != 0:
+            e1.insert(0, first_number / second_number)
+        else:
+            e1.insert(0, "Error")
 
 if __name__ == '__main__':
     root = Tk()
     root.title('Calculator')
-    l1 = Label(root,text='Calculator')
-    l1.grid(row=0, column=0)
-    e1 = Entry(root)
-    e1.grid(row=0, column=1)
-    b1 = Button(root,text="1",width=9,height=3,command=lambda :insert_number(1))
-    b1.grid(row=1, column=0,columnspan=1)
-    b2 = Button(root, text="2",width=9,height=3, command=lambda: insert_number(2))
-    b2.grid(row=1, column=1, columnspan=1)
-    b3 = Button(root, text="3",width=9,height=3, command=lambda: insert_number(3))
-    b3.grid(row=1, column=2, columnspan=1)
-    b4 = Button(root, text="4",width=9,height=3, command=lambda: insert_number(4))
-    b4.grid(row=2, column=0, columnspan=1)
-    b5 = Button(root, text="5",width=9,height=3, command=lambda: insert_number(5))
-    b5.grid(row=2, column=1, columnspan=1)
-    b6 = Button(root, text="6",width=9,height=3, command=lambda: insert_number(6))
-    b6.grid(row=2, column=2, columnspan=1)
-    b7 = Button(root, text="7",width=9,height=3, command=lambda: insert_number(7))
-    b7.grid(row=3, column=0, columnspan=1)
-    b8 = Button(root, text="8", width=9, height=3, command=lambda: insert_number(8))
-    b8.grid(row=3, column=0, columnspan=1)
-    b9 = Button(root, text="9", width=9, height=3, command=lambda: insert_number(9))
-    b9.grid(row=3, column=0, columnspan=1)
+    root.geometry("250x300")
 
-    # For Addition:
-    b_add = Button(root, text="+", width=9, height=3, command=lambda: set_operation('+'))
-    b_add.grid(row=4, column=0, columnspan=1)
+    e1 = Entry(root, width=20, font=('Arial', 15))
+    e1.grid(row=0, column=0, rowspan=1, columnspan=10, padx=10, pady=15)
 
-    b_equals = Button(root, text="=", width=9, height=3, command=calculate)
-    b_equals.grid(row=4, column=2, columnspan=1)
+    buttons = [
+        ('7', 1, 0), ('8', 1, 1), ('9', 1, 2),
+        ('4', 2, 0), ('5', 2, 1), ('6', 2, 2),
+        ('1', 3, 0), ('2', 3, 1), ('3', 3, 2), ('0', 4, 1)
+    ]
+    for (text, row, col) in buttons:
+        Button(root, text=text, width=6, height=2, command=lambda t=text: insert_number(t)).grid(row=row, column=col,
+                                                                                                 padx=5, pady=5)
 
-    b_clear = Button(root, text="AC", width=9, height=3, command=lambda :clear())
-    b_clear.grid(row=1, column=3, columnspan=1)
-
+    Button(root, text="+", width=6, height=2, command=lambda: set_operation('+')).grid(row=1, column=3, padx=2, pady=2)
+    Button(root, text="-", width=6, height=2, command=lambda: set_operation('-')).grid(row=2, column=3, padx=2, pady=2)
+    Button(root, text="*", width=6, height=2, command=lambda: set_operation('*')).grid(row=3, column=3, padx=2, pady=2)
+    Button(root, text="/", width=6, height=2, command=lambda: set_operation('/')).grid(row=4, column=3, padx=2, pady=2)
+    Button(root, text="=", width=6, height=2, command=calculate).grid(row=4, column=2, padx=2, pady=2)
+    Button(root, text="C", width=6, height=2, command=clear_entry).grid(row=4, column=0, padx=2, pady=2)
 
     root.mainloop()
